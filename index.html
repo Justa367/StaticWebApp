@@ -1,69 +1,63 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="theme-color" content="#000000" />
-    <link rel="stylesheet" href="index.css">
-    <title>DemoWebApp</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moja Static Web App</title>
 </head>
 <body>
-    <header>Lalallalal kocham PPG</header>
-    <article>
-        <h2>Wspaniałe kolory puszki coca - cola</h2>
-        <img
-            src="images/cocacola.png"
-            alt="Puszka Coca-Cola"
-            width="130px"
-            height="200px"
-        />
-        <p>Specyfikacje</p>
-        <ul>
-            <li>Elegancki kolor czerwoniutki</li>
-            <li>Mroczny czarny</li>
-        </ul>
-        <button>Daj okejke</button>
+  <h1>Witaj w mojej statycznej aplikacji!</h1>
+  <p>To jest przykładowa strona statyczna z funkcją API obsługującą telemetrykę Application Insights.</p>
 
-        <h2>Te wspaniałe farby Dekoral</h2>
-        <img
-            src="images/dekoral.png"
-            alt="Farba Dekoral"
-            width="130px"
-            height="130px"
-        />
-        <p>Specyfikacje</p>
-        <ul>
-            <li>Żadna farba nie wygląda na twojej ścianie tak dobrze</li>
-            <li>Giga dużo palet kolorów do wyboru</li>
-            <li>Nawet taką odporną na szorowanie znajdziesz</li>
-        </ul>
-        <button>Daj mega okejke</button>
+  <!-- Przykładowy skrypt Application Insights -->
+  <script type="text/javascript">
+    var appInsights = window.appInsights || function(config) {
+      function r(config) { t[config] = function(){ var i = arguments; t.queue.push(function(){ t[config].apply(t,i) }) } }
+      var t = { config: config }, u = document, e = window, o = "script", s = u.createElement(o);
+      s.src = config.src || "https://js.monitor.azure.com/scripts/b/ai.2.min.js";
+      u.getElementsByTagName(o)[0].parentNode.appendChild(s);
+      t.queue = [];
+      var f = ["trackEvent","trackPageView","trackException","trackTrace","trackDependencyData","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"];
+      while(f.length) { r(f.pop()); }
+      if (!config.disableExceptionTracking) {
+        var originalOnError = e.onerror;
+        e.onerror = function(message, url, lineNumber, columnNumber, errorObj) {
+          var event = {
+            message: message,
+            url: url,
+            line: lineNumber,
+            column: columnNumber,
+            error: errorObj
+          };
+          t.trackException({exception: event});
+          if (originalOnError) {
+            return originalOnError(message, url, lineNumber, columnNumber, errorObj);
+          }
+        };
+      }
+      return t;
+    }({
+      instrumentationKey: "TWÓJ_INSTRUMENTATION_KEY",  // <- Podmień na swój klucz
+        src: "https://js.monitor.azure.com/scripts/b/ai.2.min.js"
+    });
+    window.appInsights = appInsights;
+    appInsights.trackPageView();
+  </script>
 
-        <h2>Pracownicy polecają super książki</h2>
-        <img
-            src="images/ksiazka.png"
-            alt="Książka"
-            width="130px"
-            height="200px"
-        />
-        <p>Specyfikacje</p>
-        <ul>
-            <li>ABC dla prawdziwego PM'a</li>
-            <li>Tylko w wersji angielskiej</li>
-            <li>Praca jako PM GWARANTOWANA</li>
-        </ul>
-        <button>Daj giga okejke</button>
-    </article>
-
-    <script src="https://js.monitor.azure.com/scripts/b/ai.2.min.js"></script>
-    <script>
-        window.appInsights = window.appInsights || new Microsoft.ApplicationInsights.ApplicationInsights({
-            config: {
-                instrumentationKey: "581a021d-5817-42ea-8c76-f7a9c1a4897c"
-            }
+  <!-- Przykładowy przycisk wywołujący funkcję API -->
+  <button onclick="callApi()">Wywołaj API</button>
+  <p id="response"></p>
+  <script>
+    function callApi() {
+      fetch('/api/hello')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('response').innerText = data;
+        })
+        .catch(error => {
+          document.getElementById('response').innerText = 'Błąd: ' + error;
         });
-        appInsights.loadAppInsights();
-        appInsights.trackPageView();
-    </script>
-
-    <script src="scripst.js"></script
+    }
+  </script>
+</body>
+</html>
